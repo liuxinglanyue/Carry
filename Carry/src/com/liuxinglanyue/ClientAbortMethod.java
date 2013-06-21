@@ -252,7 +252,7 @@ public class ClientAbortMethod {
 		String path = "data//" + myFormat.format(new Date());
 		File direct = new File(path);
 		direct.mkdirs();
-		File file = new File(path + "//" + key + "_" + System.currentTimeMillis() + ".xls");
+		File file = new File(path + "//" + key + "_" + System.currentTimeMillis() + "_" + goldYear + "年_从" + pageNumFrom + "页到" + pageNum + "页.xls");
 		WritableWorkbook book= Workbook.createWorkbook(file); 
         WritableSheet sheet=book.createSheet("第一页",0); 
         sheet.setColumnView(0, 25);
