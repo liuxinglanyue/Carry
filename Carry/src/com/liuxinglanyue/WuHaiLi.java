@@ -26,21 +26,21 @@ import org.apache.http.protocol.RequestUserAgent;
 import org.apache.http.util.EntityUtils;
 
 /**
- * HttpClient¶ÁÈ¡Ò³ÃæµÄÊ¹ÓÃÀı×Ó
+ * HttpClientè¯»å–é¡µé¢çš„ä½¿ç”¨ä¾‹å­
  * 
- * @author ÀÏ×ÏÖñ(java2000.net)
+ * @author è€ç´«ç«¹(java2000.net)
  * 
  */
 public class WuHaiLi {
 	public static void main(String[] args) throws Exception {
 
 		HttpParams params = new BasicHttpParams();
-		// HTTP Ğ­ÒéµÄ°æ±¾,1.1/1.0/0.9
+		// HTTP åè®®çš„ç‰ˆæœ¬,1.1/1.0/0.9
 		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		// ×Ö·û¼¯
+		// å­—ç¬¦é›†
 		HttpProtocolParams.setContentCharset(params, "UTF-8");
-		// Î±×°µÄä¯ÀÀÆ÷ÀàĞÍ
-		// IE7 ÊÇ
+		// ä¼ªè£…çš„æµè§ˆå™¨ç±»å‹
+		// IE7 æ˜¯
 		// Mozilla/4.0 (compatible; MSIE 7.0b; Windows NT 6.0)
 		//
 		// Firefox3.03
@@ -93,14 +93,14 @@ public class WuHaiLi {
 				response.setParams(params);
 				httpexecutor.postProcess(response, httpproc, context);
 
-				// ·µ»ØÂë
+				// è¿”å›ç 
 				System.out.println("<< Response: " + response.getStatusLine());
-				// ·µ»ØµÄÎÄ¼şÍ·ĞÅÏ¢
+				// è¿”å›çš„æ–‡ä»¶å¤´ä¿¡æ¯
 				Header[] hs = response.getAllHeaders();
 				for (Header h : hs) {
 					System.out.println(h.getName() + ":" + h.getValue());
 				}
-				// Êä³öÖ÷ÌåĞÅÏ¢
+				// è¾“å‡ºä¸»ä½“ä¿¡æ¯
 				System.out.println(EntityUtils.toString(response.getEntity()));
 				System.out.println("==============");
 				if (!connStrategy.keepAlive(response, context)) {

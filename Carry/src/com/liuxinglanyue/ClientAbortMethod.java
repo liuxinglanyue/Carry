@@ -27,8 +27,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;  
   
 /**
- * °æÈ¨ËùÓĞÈË£ºliuxinglanyue
- * Ó¢ÎÄÃû£ºHerry
+ * ç‰ˆæƒæ‰€æœ‰äººï¼šliuxinglanyue
+ * è‹±æ–‡åï¼šHerry
  * @author Jiao JianFeng
  *2013-6-19
  */
@@ -245,16 +245,16 @@ public class ClientAbortMethod {
 	}
 	
 	private static void exportExcel(List<User> userList, String key) throws IOException, RowsExceededException, WriteException {
-		System.out.println("µ¼³öµ½ExcelÎÄ¼ş¡£¡£¡£¡£");
-		String title[]={"ĞÕÃû","ÊÖ»ú","¹Ì¶¨µç»°","Ö§¸¶·½Ê½","¹©Ó¦ÉÌÄêÏŞ","Ê¡·İ","³ÇÊĞ","Á´½Ó"};
+		System.out.println("å¯¼å‡ºåˆ°Excelæ–‡ä»¶ã€‚ã€‚ã€‚ã€‚");
+		String title[]={"å§“å","æ‰‹æœº","å›ºå®šç”µè¯","æ”¯ä»˜æ–¹å¼","ä¾›åº”å•†å¹´é™","çœä»½","åŸå¸‚","é“¾æ¥"};
 
-		SimpleDateFormat myFormat=new SimpleDateFormat("yyyyÄêMMÔÂddÈÕ");
+		SimpleDateFormat myFormat=new SimpleDateFormat("yyyyå¹´MMæœˆddæ—¥");
 		String path = "data//" + myFormat.format(new Date());
 		File direct = new File(path);
 		direct.mkdirs();
-		File file = new File(path + "//" + key + "_" + System.currentTimeMillis() + "_" + goldYear + "Äê_´Ó" + pageNumFrom + "Ò³µ½" + pageNum + "Ò³.xls");
+		File file = new File(path + "//" + key + "_" + System.currentTimeMillis() + "_" + goldYear + "å¹´_ä»" + pageNumFrom + "é¡µåˆ°" + pageNum + "é¡µ.xls");
 		WritableWorkbook book= Workbook.createWorkbook(file); 
-        WritableSheet sheet=book.createSheet("µÚÒ»Ò³",0); 
+        WritableSheet sheet=book.createSheet("ç¬¬ä¸€é¡µ",0); 
         sheet.setColumnView(0, 25);
         sheet.setColumnView(1, 20);
         sheet.setColumnView(2, 20);
@@ -280,7 +280,7 @@ public class ClientAbortMethod {
     	}
         book.write();
         book.close();
-        System.out.println("µ¼³öµ½ExcelÎÄ¼ş³É¹¦£¬ÎÄ¼şÂ·¾¶Îª£º" + file.getAbsolutePath());
+        System.out.println("å¯¼å‡ºåˆ°Excelæ–‡ä»¶æˆåŠŸï¼Œæ–‡ä»¶è·¯å¾„ä¸ºï¼š" + file.getAbsolutePath());
 	}
 
     public static void main(String[] args){  
@@ -299,7 +299,7 @@ public class ClientAbortMethod {
         List<User> userList = new ArrayList<User>();
         List<User> cloneUserList = new ArrayList<User>();
         for(int i=pageNumFrom; i<= pageNum; i++) {
-        	System.out.println("ÏÂÔØµÚ" + i + "¸öÒ³Ãæ¡£¡£¡£¡£¡£");
+        	System.out.println("ä¸‹è½½ç¬¬" + i + "ä¸ªé¡µé¢ã€‚ã€‚ã€‚ã€‚ã€‚");
         	String pageString = "";
 			try {
 				pageString = clientAbortMethod.getPage("http://www.alibaba.com/products/F0/" + key + "/--CN/" + i +".html");
@@ -316,7 +316,7 @@ public class ClientAbortMethod {
         	System.out.println(pageUrlList.size());
         	for(String url : pageUrlList) {
         		pagepage++;
-        		System.out.println("´¦ÀíµÚ" + pagepage + "¸öÁ´½Ó£º" + url);
+        		System.out.println("å¤„ç†ç¬¬" + pagepage + "ä¸ªé“¾æ¥ï¼š" + url);
         		String detailString = "";
         		try {
 					detailString = clientAbortMethod.getPage(url);
