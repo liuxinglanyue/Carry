@@ -342,7 +342,7 @@ public class ClientAbortMethod {
         User clone = null;
         for(User user : cloneUserList) {
         	if(null != clone) {
-        		if(!user.getTelephone().equals(clone.getTelephone()) || !user.getMobile_Phone().equals(clone.getMobile_Phone())) {
+        		if(!user.getTelephone().equals(clone.getTelephone()) && !user.getMobile_Phone().equals(clone.getMobile_Phone())) {
         			userList.add(user);
         			clone = user;
         		}
@@ -435,10 +435,8 @@ class User implements Comparable<User> {
 	}
 
 	public int compareTo(User o) {
-		if(this.mobile_Phone.equals(o.getMobile_Phone())) {
-			if(this.telephone.equals(o.getTelephone())) {
-				return 0;
-			}
+		if(this.mobile_Phone.equals(o.getMobile_Phone()) || this.telephone.equals(o.getTelephone())) {
+			return 0;
 		}
 		return 1;
 	}
