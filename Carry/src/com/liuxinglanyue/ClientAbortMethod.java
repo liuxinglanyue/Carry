@@ -42,6 +42,10 @@ public class ClientAbortMethod {
 	private String getPage(String url) throws ClientProtocolException, IOException {
 		StringBuilder stringBuilder = new StringBuilder();
 		HttpGet httpget = new HttpGet(url); 
+		httpget.setHeader("user-agent", "Mozilla/4.0 (Windows NT 5.1; rv:8.0.1) Gecko/20100101");
+		httpget.setHeader("accept", "*/*");
+		httpget.setHeader("accept-language", "zh-CN");
+		httpget.setHeader("accept-encoding", "utf-8, deflate");
 		HttpResponse response = httpClient.execute(httpget);  
         HttpEntity entity = response.getEntity();  
         if (entity != null) {  
@@ -342,7 +346,7 @@ public class ClientAbortMethod {
         User clone = null;
         for(User user : cloneUserList) {
         	if(null != clone) {
-        		if(!user.getTelephone().equals(clone.getTelephone()) && !user.getMobile_Phone().equals(clone.getMobile_Phone())) {
+        		if(!user.getTelephone().equals(clone.getTelephone()) || !user.getMobile_Phone().equals(clone.getMobile_Phone())) {
         			userList.add(user);
         			clone = user;
         		}
@@ -435,8 +439,10 @@ class User implements Comparable<User> {
 	}
 
 	public int compareTo(User o) {
-		if(this.mobile_Phone.equals(o.getMobile_Phone()) || this.telephone.equals(o.getTelephone())) {
-			return 0;
+		if(this.mobile_Phone.equals(o.getMobile_Phone())) {
+			if(this.telephone.equals(o.getTelephone())) {
+				return 0;
+			}
 		}
 		return 1;
 	}
