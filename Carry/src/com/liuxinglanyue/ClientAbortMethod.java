@@ -96,7 +96,7 @@ public class ClientAbortMethod {
 					int year = Integer.parseInt(number);
 					return year;
 				} catch (Exception e) {
-					
+					System.out.println("获取年限出错！！！！！！！！！！！！！");
 				}
 				//System.out.println(number);
 			}
@@ -245,6 +245,7 @@ public class ClientAbortMethod {
 		user.setTelephone(getTelephone(contactString));
 		user.setProvince(getProvince(contactString));
 		user.setGold(year + "");
+		System.out.println("用户名：" + user.getName() + " 用户年限:" + user.getGold());
 		return user;
 	}
 	
@@ -300,6 +301,7 @@ public class ClientAbortMethod {
     	key = key.replaceAll(" ", "_");
         ClientAbortMethod clientAbortMethod = new ClientAbortMethod();
         List<String> pageUrlList = new ArrayList<String>();
+        List<String> errorPageUrlList = new ArrayList<String>();
         List<User> userList = new ArrayList<User>();
         List<User> cloneUserList = new ArrayList<User>();
         for(int i=pageNumFrom; i<= pageNum; i++) {
@@ -308,7 +310,7 @@ public class ClientAbortMethod {
 			try {
 				pageString = clientAbortMethod.getPage("http://www.alibaba.com/products/F0/" + key + "/--CN/" + i +".html");
 			} catch (Exception e) {
-				e.printStackTrace();
+				System.out.println("---------获取链接 出错------------");
 			}
         	//System.out.println(pageString);
         	if(!"".equals(pageString)) {
@@ -325,16 +327,20 @@ public class ClientAbortMethod {
         		try {
 					detailString = clientAbortMethod.getPage(url);
 				} catch (IOException e) {
-					e.printStackTrace();
+					System.out.println("---------获取主页面出错------------");
 				}
-        		int year = 100;
-        		if(!"".equals(detailString) && (year = gold(detailString)) <= goldYear && -1 == detailString.toLowerCase().indexOf("paypal")) {
+        		int year = gold(detailString);
+        		if(1000 == year) {
+        			System.out.println("==============坑爹的阿里巴巴=================");
+        			errorPageUrlList.add(url);
+        		}
+        		if(!"".equals(detailString) && year <= goldYear && -1 == detailString.toLowerCase().indexOf("paypal")) {
         			String contactString = "";
         			try {
         				//getContactUrl(detailString);
     					contactString = clientAbortMethod.getPage(getContactUrl(detailString));
     				} catch (Exception e) {
-    					e.printStackTrace();
+    					System.out.println("---------获取联系人页面出错------------");
     				}
         			cloneUserList.add(getUserInfo(getProValue(detailString), url, contactString, year));
         		}
@@ -362,12 +368,17 @@ public class ClientAbortMethod {
         try {
 			exportExcel(userList, key);
 		} catch (RowsExceededException e) {
-			e.printStackTrace();
+			System.out.println("---------导出excel出错-------1-----");
 		} catch (WriteException e) {
-			e.printStackTrace();
+			System.out.println("---------导出excel出错-------2-----");
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("---------导出excel出错-------3-----");
 		}
+        System.out.println("+++++++++++++++++++++++++++++++++++++++");
+        for(String urlString : errorPageUrlList) {
+        	System.out.println("url: " + urlString);
+        }
+        System.out.println("+++++++++++++++++++++++++++++++++++++++");
     }  
   
 }  
