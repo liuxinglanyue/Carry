@@ -1,7 +1,9 @@
 package com.liuxinglanyue;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -98,9 +100,31 @@ public class ClientAbortMethod {
 				} catch (Exception e) {
 					System.out.println("获取年限出错！！！！！！！！！！！！！");
 				}
-				//System.out.println(number);
+			} else if(-1 != (th = detail.indexOf("rd"))) {
+				String number = detail.substring(0, th);
+				try {
+					int year = Integer.parseInt(number);
+					return year;
+				} catch (Exception e) {
+					System.out.println("获取年限出错！！！！！！！！！！！！！");
+				}
+			} else if(-1 != (th = detail.indexOf("nd"))) {
+				String number = detail.substring(0, th);
+				try {
+					int year = Integer.parseInt(number);
+					return year;
+				} catch (Exception e) {
+					System.out.println("获取年限出错！！！！！！！！！！！！！");
+				}
+			} else if(-1 != (th = detail.indexOf("st"))) {
+				String number = detail.substring(0, th);
+				try {
+					int year = Integer.parseInt(number);
+					return year;
+				} catch (Exception e) {
+					System.out.println("获取年限出错！！！！！！！！！！！！！");
+				}
 			}
-			//System.out.println(detail);
 		}
 		return 1000;
 	}
@@ -287,6 +311,25 @@ public class ClientAbortMethod {
         book.close();
         System.out.println("导出到Excel文件成功，文件路径为：" + file.getAbsolutePath());
 	}
+	
+	public static void printTxt(String detailString) throws IOException {
+		SimpleDateFormat myFormat=new SimpleDateFormat("yyyy年MM月dd日");
+		String path = "error//" + myFormat.format(new Date());
+		File direct = new File(path);
+		direct.mkdirs();
+		File f = new File(path + "//" + System.currentTimeMillis() + "_" + goldYear + "年_从" + pageNumFrom + "页到" + pageNum + "页.txt");
+		if (f.exists()) {
+	        System.out.println("文件存在");
+	    } else {
+	        if (!f.createNewFile()) {
+	        	System.out.println("文件创建失败！");
+	        }
+	    }
+		
+        BufferedWriter output = new BufferedWriter(new FileWriter(f));
+        output.write(detailString);
+        output.close();
+	}
 
     public static void main(String[] args){  
     	//String key = "bandage dress";
@@ -332,6 +375,11 @@ public class ClientAbortMethod {
         		int year = gold(detailString);
         		if(1000 == year) {
         			System.out.println("==============坑爹的阿里巴巴=================");
+        			try {
+						printTxt(detailString);
+					} catch (IOException e) {
+						System.out.println("写error错误！");
+					}
         			errorPageUrlList.add(url);
         		}
         		if(!"".equals(detailString) && year <= goldYear && -1 == detailString.toLowerCase().indexOf("paypal")) {
