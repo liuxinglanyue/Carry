@@ -40,8 +40,9 @@ public class ClientAbortMethod {
 	private static int goldYear = 4;
 	private static int pageNum = 1;
 	private static int pageNumFrom = 1;
+	private static long millis = 1000;
 	
-	private String getPage(String url) throws ClientProtocolException, IOException {
+	private String getPage(String url) throws ClientProtocolException, IOException, InterruptedException {
 		StringBuilder stringBuilder = new StringBuilder();
 		HttpGet httpget = new HttpGet(url); 
 		httpget.setHeader("user-agent", "Mozilla/4.0 (Windows NT 5.1; rv:8.0.1) Gecko/20100101");
@@ -58,6 +59,7 @@ public class ClientAbortMethod {
             }  
         }  
         httpget.abort();
+        Thread.sleep(millis);
 		return stringBuilder.toString();
 	}
 	
@@ -133,12 +135,15 @@ public class ClientAbortMethod {
 		String proValue = "";
 		int from = -1;
 		if(-1 != (from = detailString.indexOf("Payment Terms:"))) {
-			String proString = detailString.substring(from + 55, from + 150);
+			String proString = detailString.substring(from, from + 200);
 			int to = -1;
-			if(-1 != (to = proString.indexOf("<"))) {
-				return proString.substring(0, to);
+			if(-1 != (to = proString.indexOf("</td>"))) {
+				proString = proString.substring(0, to);
+				from = -1;
+				if(-1 != (from = proString.lastIndexOf(">"))) {
+					return proString.substring(from + 1);
+				}
 			}
-			//System.out.println(proString);
 		}
 		return proValue;
 	}
@@ -147,13 +152,15 @@ public class ClientAbortMethod {
 		String contactString = "";
 		int from = -1;
 		if(-1 != (from = detailString.indexOf("Contact Details"))) {
-			String string = detailString.substring(from - 200, from - 24);
-			int to = -1;
-			if(-1 != (to = string.lastIndexOf("\""))) {
-				//System.out.println(string.substring(to));
-				return string.substring(to + 1);
+			String string = detailString.substring(from - 200, from - 10);
+			int httpNum = -1;
+			if(-1 != (httpNum = string.lastIndexOf("http://"))) {
+				String httpString = string.substring(httpNum);
+				int to = -1;
+				if(-1 != (to = httpString.indexOf("\""))) {
+					return httpString.substring(0, to);
+				}
 			}
-			//System.out.println(string);
 		}
 		return contactString;
 	}
@@ -369,7 +376,7 @@ public class ClientAbortMethod {
         		String detailString = "";
         		try {
 					detailString = clientAbortMethod.getPage(url);
-				} catch (IOException e) {
+				} catch (Exception e) {
 					System.out.println("---------获取主页面出错------------");
 				}
         		int year = gold(detailString);
@@ -385,7 +392,7 @@ public class ClientAbortMethod {
         		if(!"".equals(detailString) && year <= goldYear && -1 == detailString.toLowerCase().indexOf("paypal")) {
         			String contactString = "";
         			String contactUrl = getContactUrl(detailString);
-        			if(null == contactUrl || "".equals(contactUrl)) {
+        			if(null == contactUrl || "".equals(contactUrl) || !contactUrl.startsWith("http")) {
         				System.out.println("---------获取不到联系人url------------");
         				try {
     						printTxt(detailString, "contactURL");
@@ -397,6 +404,7 @@ public class ClientAbortMethod {
 	    					contactString = clientAbortMethod.getPage(contactUrl);
 	    				} catch (Exception e) {
 	    					System.out.println("---------获取联系人页面出错------------");
+	    					System.out.println("!!!!url为：" + contactUrl);
 	    					try {
 	    						printTxt(contactString, "contact");
 	    					} catch (IOException ee) {
