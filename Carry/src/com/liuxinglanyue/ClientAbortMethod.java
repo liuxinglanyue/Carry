@@ -312,12 +312,12 @@ public class ClientAbortMethod {
         System.out.println("导出到Excel文件成功，文件路径为：" + file.getAbsolutePath());
 	}
 	
-	public static void printTxt(String detailString) throws IOException {
+	public static void printTxt(String detailString, String info) throws IOException {
 		SimpleDateFormat myFormat=new SimpleDateFormat("yyyy年MM月dd日");
 		String path = "error//" + myFormat.format(new Date());
 		File direct = new File(path);
 		direct.mkdirs();
-		File f = new File(path + "//" + System.currentTimeMillis() + "_" + goldYear + "年_从" + pageNumFrom + "页到" + pageNum + "页.txt");
+		File f = new File(path + "//" + info + "--" + System.currentTimeMillis() + "_" + goldYear + "年_从" + pageNumFrom + "页到" + pageNum + "页.txt");
 		if (f.exists()) {
 	        System.out.println("文件存在");
 	    } else {
@@ -376,7 +376,7 @@ public class ClientAbortMethod {
         		if(1000 == year) {
         			System.out.println("==============坑爹的阿里巴巴=================");
         			try {
-						printTxt(detailString);
+						printTxt(detailString, "gold");
 					} catch (IOException e) {
 						System.out.println("写error错误！");
 					}
@@ -384,13 +384,27 @@ public class ClientAbortMethod {
         		}
         		if(!"".equals(detailString) && year <= goldYear && -1 == detailString.toLowerCase().indexOf("paypal")) {
         			String contactString = "";
-        			try {
-        				//getContactUrl(detailString);
-    					contactString = clientAbortMethod.getPage(getContactUrl(detailString));
-    				} catch (Exception e) {
-    					System.out.println("---------获取联系人页面出错------------");
-    				}
-        			cloneUserList.add(getUserInfo(getProValue(detailString), url, contactString, year));
+        			String contactUrl = getContactUrl(detailString);
+        			if(null == contactUrl || "".equals(contactUrl)) {
+        				System.out.println("---------获取不到联系人url------------");
+        				try {
+    						printTxt(detailString, "contactURL");
+    					} catch (IOException ee) {
+    						System.out.println("写error错误！");
+    					}
+        			} else {
+	        			try {
+	    					contactString = clientAbortMethod.getPage(contactUrl);
+	    				} catch (Exception e) {
+	    					System.out.println("---------获取联系人页面出错------------");
+	    					try {
+	    						printTxt(contactString, "contact");
+	    					} catch (IOException ee) {
+	    						System.out.println("写error错误！");
+	    					}
+	    				}
+	        			cloneUserList.add(getUserInfo(getProValue(detailString), url, contactString, year));
+        			}
         		}
         	}
         }
